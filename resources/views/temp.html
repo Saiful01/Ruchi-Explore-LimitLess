@@ -1,0 +1,1665 @@
+@extends('layouts.common')
+
+@section('title', 'Explore Bangladesh')
+
+
+@section('content')
+<style>
+    .zoom {
+        transition: transform .2s; /* Animation */
+        margin: 0 auto;
+    }
+
+    .zoom:hover {
+        transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    }
+
+    .card-header h4 {
+        font-size: 15px;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .card-body {
+        font-size: 14px;
+        padding: 30px;
+    }
+
+    .card-header a .indicator {
+        color: #e04f67;
+        margin-bottom: -15px;
+    }
+    .icon-minus{
+        margin-top: -19px;
+    }
+    .icon-plus{
+        margin-top: -19px;
+    }
+
+    #image-map{
+        background:url(https://ruchiexplorelimitless.com/images/explore/7.jpg) no-repeat;
+        width:947px;
+        height:1057px;
+        position:relative;
+    }
+    #tooltip{
+        position:absolute;
+        background:#fff;
+        border:1px solid #999;
+        padding:4px;
+        z-index: 100;
+        display:none;
+    }
+    .hoverPoint{
+        position:absolute;
+        width:47px;
+        height:47px;
+        cursor:pointer;
+    }
+    .place-text{
+        padding: 0 20px;
+        font-size: 12px;
+        line-height: 20px;
+        color: #7a7f82;
+        margin-bottom: 0;
+    }
+    @media (max-width: 767px) {
+        #tooltip{
+            position:absolute;
+            background:#fff;
+            border:1px solid #999;
+            padding:4px;
+            z-index: 100;
+            display:none;
+            left: calc(50%);
+            transform: translateX(-50%);
+            padding: 3px;
+        }
+        #some-element { display: none; }
+    }
+
+
+</style>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script>
+    /* json format
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            */
+    var mapDataJson =
+        [
+            {
+                "title": "মনিপুরী তাঁত",
+                "text": "সিলেট, মৌলভীবাজার, সুনামগঞ্জ ও হবিগঞ্জ জেলায় মনিপুর জনগোষ্ঠীর বসবাস। মনিপুরীরা বুননশিল্পে খুব দক্ষ। তাদের উৎপাদিত তাঁত পণ্য মনিপুরী তাঁত বলে পরিচিত। ফানেক, শাড়ি, শাল, ওড়না, ত্রি পিস, গামছা, ফতুয়া, পাঞ্জাবি ইত্যাদি তৈরি করে থাকে তারা। মনিপুরী ভাষায় তাঁতকে বলে ইয়োং। বর্তমানে ঐতিহ্য ও আধুনিকতার মেলবন্ধনে মনিপুরী শাড়ি খুবই বিখ্যাত, উজ্জ্বল রঙের সুতায় তৈরি মনিপুরী শাড়ি দেখতে যেমন সুন্দর, তেমনি মসৃন ও হালকা।",
+                "image": "https://ruchiexplorelimitless.com/images/tourist_spot/1593462562.jpg"
+            },
+            {
+                "title": "রাজশাহী সিল্ক",
+                "text": "রাজশাহীর বিশেষ সূক্ষ ও নরম মোলায়েম আঁশ দিয়ে তৈরি রাজশাহী সিল্ক শাড়িতে জনপ্রিয় একটি নাম। রাজশাহীর সিল্ক দিয়ে তৈরি শাড়ি এবং অন্যান্য পণ্যগুলো দেশ এবং দেশের বাইরে ব্যাপক জনপ্রিয়তা অর্জন করেছে। রাজশাহী রেশম শিল্পের বিকাশের জন্য সিল্ক গবেষণা ইন্সটিটিউট গড়ে তুলেছে। প্রায় ১০ হাজার মানুষ প্রত্যক্ষ বা পরোক্ষভাবে এই শিল্পের সাথে জড়িত।",
+                "image": "https://ruchiexplorelimitless.com/images/tourist_spot/1593462137.jpg"
+            },
+            {
+                "title": "মেজবানি",
+                "text": "মেজবান বাংলাদেশের চট্টগ্রাম অঞ্চলের বহুমাত্রিক ঐতিহ্যবাহী একটি ভোজের অনুষ্ঠান চট্টগ্রামের আঞ্চলিক ভাষায় একে মেজ্জান বলা হয়। কারো মৃত্যুর পর কুলখানি, মৃত্যুবার্ষিকী, শিশুর জন্মের পর আকিকা, জন্মদিবস উপলক্ষে, ব্যক্তিগত সাফল্য, বিবাহ, খৎনা ও ধর্মীয় ব্যক্তির মৃত্যুবার্ষিকী উপলক্ষে মেজবানির আয়োজন করা হয়। এটি একটি ঐতিহ্যবাহী আঞ্চলিক উৎসব যেখানে অতিথীদের সাদা ভাত এবং গরুর মাংস খাওয়ার জন্য আমন্ত্রণ জানানো হয়। বর্তমানে মেজবান ঐতিহ্যবাহী খাবার হিসেবে প্রসিদ্ধি লাভ করেছে।",
+                "image": "https://ruchiexplorelimitless.com/images/tourist_spot/1593462650.jpg"
+            },
+            {
+                "title": "চুই ঝাল",
+                "text": " চুই ঝাল গাছ দেখতে পানের লতার মতো। পাতায় ঝাল নেই, কান্ড বা লতা কেটে ছোট টুকরা করে মাছ-মাংস রান্নায় ব্যবহার করা হয়। চুইয়ের নিজস্ব স্বাদ ও ঘ্রাণ আছে। গাছটির কাণ্ড বা লতা মসলা হিসেবে ব্যবহার করা হয়। রান্নায় এর ঝাল খাবারের স্বাদ বাড়ায় কিন্তু শরীরের কোন ক্ষতি করে না। বাংলাদেশের দক্ষিণ- পশ্চিমাঞ্চলে চুই ঝাল খুবই জনপ্রিয়।",
+                "image": "https://ruchiexplorelimitless.com/images/tourist_spot/1593462896.jpg"
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "সাতছড়ি জাতীয় উদ্যান",
+                "text": "বাংলাদেশের অন্যতম প্রাকৃতিক উদ্যান সাতছড়ি প্রাকৃতিক উদ্যান। ২৪৩ হেক্টর আয়তন\n                                        বিশিষ্ট এই\n                                        বনভূমি\n                                        ২০০৫ খ্রিষ্টাব্দে প্রতিষ্ঠা করা হয়। এর আগের নাম ছিলো রঘুনন্দন হিল রিজার্ভ\n                                        ফরেস্ট। ভেতরে\n                                        সাতটি\n                                        ছড়া থাকায় পরবর্তীতে এর নামকরণ হয় সাতছড়ি।",
+                "image": "/images/tourist_spot/1593454210.jpg"
+            },
+            {
+                "title": "রেমা কালেঙ্গা",
+                "text": "রেমা কালেঙ্গা বন্যপ্রাণ অভয়ারণ্য দেশের সংরক্ষিত বনাঞ্চলের মাঝে অন্যতম।\n                                        সুন্দরবনের পর দেশের\n                                        সবচেয়ে বড় প্রাকৃতিক বনভূমি রেমা কালেঙ্গা। সিলেট বিভাগের হবিগঞ্জ জেলার চুনারুঘাট\n                                        উপজেলার\n                                        অন্তর্গত\n                                        এই অভয়ারণ্য প্রতিষ্ঠা করা হয় ১৯৮২ সালে।",
+                "image": "/images/tourist_spot/1593453820.jpg"
+            },
+            {
+                "title": "লাউয়াছড়া জাতীয় উদ্যান",
+                "text": "বাংলাদেশের চিরহরিৎ বনের সংরক্ষিত বনাঞ্চল লাউয়াছড়া জাতীয় উদ্যান। মৌলভীবাজার জেলার\n                                        কমলগঞ্জ\n                                        উপজেলায়\n                                        এর অবস্থান। ১২৫০ হেক্টর আয়তনের এই উদ্যান জীববৈচিত্র‍্যে ভরপুর। ১৯৯৭ সালে\n                                        লাউয়াছড়াকে জাতীয়\n                                        উদ্যান\n                                        ঘোষণা করা হয়। বিলুপ্তপ্রায় উল্লুক সহ মুখপোড়া হনুমান, বানর, শেয়াল, মেছোবাঘ, ভালুক\n                                        ও মায়া\n                                        হরিণের\n                                        আবাসস্থল লাউয়াছড়া।",
+                "image": "/images/tourist_spot/1593454016.jpg"
+            },
+            {
+                "title": "দুধপুকুরিয়া- ধোপাছড়ি বন্যপ্রাণ অভয়ারণ্য",
+                "text": "এই বন্যপ্রাণ অভয়ারণ্য বাংলাদেশের চট্টগ্রাম জেলায় অবস্থিত। ২০১০ সালের ৬ এপ্রিল এর\n                                        উদবোধন করা\n                                        হয়।\n                                        এর আয়তন ৪৭১৬.৫৭ হেক্টর। বিভিন্ন প্রজাতির জীব জন্তুতে সমৃদ্ধ এই বন্যপ্রাণ\n                                        অভয়ারণ্য।",
+                "image": "/images/tourist_spot/1593454739.jpg"
+            },
+            {
+                "title": "চুনতি বন্যপ্রাণ অভয়ারণ্য",
+                "text": "বাংলাদেশের সংরক্ষিত বনাঞ্চল ও অভয়ারণ্য। চট্টগ্রাম থেকে ৭০ কিলোমিটার দক্ষিণে\n                                        চট্টগ্রাম\n                                        কক্সবাজার\n                                        মহাসড়কের পাশে এর অবস্থান। এর আয়তন ৭৭৬৪ হেক্টর। প্রায় ১২০০ প্রজাতির উদ্ভিদ ও ১৭৮\n                                        প্রজাতির\n                                        জীবজন্তু ও পাখি নিয়ে এই বনাঞ্চল সমৃদ্ধ ।",
+                "image": "/images/tourist_spot/1593454939.jpg"
+            },
+            {
+                "title": "হিমছড়ি জাতীয় উদ্যান",
+                "text": " চট্টগ্রাম বিভাগের কক্সবাজার জেলার হিমছড়িতে এর অবস্থান। ১৯৮০ সালে প্রতিষ্ঠা করা\n                                        হয় এই\n                                        বনাঞ্চলের,\n                                        ১৭২৯ হেক্টর আয়তন বিশিষ্ট এই জাতীয় উদ্যান প্রতিষ্ঠিত হয় গবেষণা ও শিক্ষা, পর্যটন ও\n                                        বিনোদনকেন্দ্র\n                                        এবং বন্যপ্রাণী সংরক্ষণের জন্য।",
+                "image": "/images/tourist_spot/1593455409.jpg"
+            },
+            {
+                "title": "টেকনাফ বন্যপ্রাণ অভয়ারণ্য",
+                "text": "বাংলাদেশের একমাত্র গেম রিজার্ভ বন। ১১,৬১৫ হেক্টর জায়গা নিয়ে প্রতিষ্ঠিত এই\n                                        অভয়ারণ্য বন্য\n                                        হাতির\n                                        আবাসস্থল বলে পরিচিত। ১৯৮৩ খ্রিষ্টাব্দে প্রতিষ্ঠা হয় এই বনাঞ্চলের। কক্সবাজার\n                                        জেলার টেকনাফে এর\n                                        অবস্থান। এর অভ্যন্তরে নাইটং পাহাড়, কুদুম গুহা, কুঠি পাহাড়, তৈঙ্গা চূড়াসহ বিভিন্ন\n                                        আকর্ষণীয়\n                                        স্থান\n                                        রয়েছে। এই অভয়ারণ্যের জীববৈচিত্র্য বাংলাদেশের মাঝে সর্বাধিক।",
+                "image": "/images/tourist_spot/1593455115.jpg"
+            },
+            {
+                "title": "সুন্দরবন",
+                "text": "বাংলাদেশের খুলনা, সাতক্ষীরা ও বাগেরহাট জেলা জুড়ে অবস্থিত পৃথিবীর সবচেয়ে বড়\n                                        ম্যানগ্রোভ বন\n                                        সুন্দরবন। আয়তনে ১০ হাজার বর্গ কিলোমিটার, যার ৬০১৭ বর্গ কিলোমিটার বাংলাদেশের অংশে\n                                        অবস্থিত,\n                                        বাদবাকি অংশ ভারতের অন্তর্গত। প্রকৃতির অপার বিস্ময় এই বন ১৯৯৭ সালে ইউনেস্কো\n                                        কর্তৃক বিশ্ব\n                                        ঐতিহ্যবাহী স্থান এর স্বীকৃতি পায়।",
+                "image": "/images/tourist_spot/1593086046.jpg"
+            },
+            {
+                "title": "কান্তজির মন্দির",
+                "text": "বাংলাদেশের দিনাজপুরে অবস্থিত একটি প্রাচীন মন্দির কান্তজীউ বা কান্তজির মন্দির।\n                                        এটি নবরত্ন\n                                        মন্দির\n                                        নামেও পরিচিত কারণ তিনতলাবিশিষ্ট এই মন্দিরে নয়টি চূড়া বা রত্ন ছিলো। দিনাজপুরের\n                                        মহারাজা\n                                        প্রাণনাথ\n                                        রায় তার শেষ বয়সে মন্দিরের কাজ শুরু করেন, তার পোষ্যপুত্র মহারাজা রামনাথ রায় ১৭৫২\n                                        খ্রিস্টাব্দে\n                                        এটি\n                                        নির্মাণ সম্পন্ন করেন। ৭০ ফুট উচ্চতার এই মন্দিরের নয়টি চূড়া ১৮৯৭ খ্রিষ্টাব্দের\n                                        ভূমিকম্পে ভেঙে\n                                        যায়। এই মন্দিরের গায়ে পোড়ামাটির অলংকরণে ফুটিয়ে তোলা হয়েছে পৌরাণিক কাহিনিসমূহ।\n                                        বাংলাদেশের\n                                        সর্বোৎকৃষ্ট টেরাকোটা শিল্পের নিদর্শন এই মন্দির।",
+                "image": "/images/tourist_spot/1593451190.jpg"
+            },
+            {
+                "title": "বেহুলার বাসর ঘর",
+                "text": "বেহুলার বাসর ঘর ঐতিহাসিক মহাস্থানগড়ে অবস্থিত। মহাস্থানগড় বাসস্ট্যান্ড থেকে প্রায়\n                                        ২ কি.মি.\n                                        দক্ষিণ\n                                        পশ্চিমে একটি বৌদ্ধ স্তম্ভ রয়েছে যা সম্রাট অশোক নির্মাণ করেছুলেন বলে ধারণা করা\n                                        হয়। স্তম্ভের\n                                        উচ্চতা প্রায় ৪৫ ফুট, এর পূর্বার্ধে রয়েছে ২৪ কোণ বিশিষ্ট চৌবাচ্চা সদৃশ গোসলখানা।\n                                        এটি বেহুলার\n                                        বাসর\n                                        ঘর নামেই পরিচিত।",
+                "image": "/images/tourist_spot/1593453115.jpg"
+            },
+            {
+                "title": "স্মৃতিসৌধ",
+                "text": "বাংলাদেশের স্বাধীনতা যুদ্ধের শহিদদের স্মৃতির উদ্দেশ্যে নিবেদিত একটি স্মারক\n                                        স্থাপনা। এর নকশা\n                                        প্রণয়ন করেছেন স্থপতি সৈয়দ মাইনুল হোসেন। মুক্তিযুদ্ধে নিহতদের দশটি গণকবর আছে\n                                        অভ্যন্তরে। ১৯৭৮\n                                        সালে\n                                        এর নির্মাণকাজ শুরু হয়, সমাপ্ত হয় ১৯৮২ সালে। এখানে সাতটি ত্রিভুজাকৃতির মিনারের\n                                        শিখরের মাধ্যমে\n                                        বাংলাদেশের মুক্তি সংগ্রামের সাতটি পর্যায় নির্দেশ করা হয়। ১৯৫২'র ভাষা আন্দোলন,\n                                        ১৯৫৪'র\n                                        যুক্তফ্রন্ট\n                                        নির্বাচন, ১৯৫৬'র শাসনতন্ত্র আন্দোলন, ১৯৬২'র শিক্ষা আন্দোলন, ১৯৬৬'র ছয় দফা\n                                        আন্দোলন, ১৯৬৯'র গণ\n                                        অভ্যুত্থান এবং ১৯৭১'র মহান মুক্তিযুদ্ধ— এই সাতটি ঘটনাকে স্বাধীনতা আন্দোলনের\n                                        পরিক্রমা হিসেবে\n                                        দেখানো হয়েছে স্মৃতিসৌধের সাতটি মিনারের মাধ্যমে। মিনারটি ৪৫ মিটার উঁচু, আয়তন ৮৪\n                                        একর।\n                                        স্মৃতিসৌধ\n                                        প্রাঙ্গনে আরও রয়েছে উন্মুক্ত মঞ্চ, হেলিপ্যাড এবং ক্যাফেটেরিয়া।",
+                "image": "/images/tourist_spot/1593451048.jpg"
+            },
+            {
+                "title": "লালবাগ কেল্লা",
+                "text": "ঢাকার দক্ষিণ- পশ্চিমাঞ্চলে বুড়িগঙ্গা নদীর তীরে অবস্থিত একটি মুঘল দুর্গের নাম\n                                        লালবাগ কেল্লা।\n                                        ১৬৭৮\n                                        সালে মুঘল সুবাদার মুহাম্মদ আজম শাহ এর নির্মাণকাজ শুরু করেন। মুঘল সুবাদার\n                                        শায়েস্তা খাঁ ১৬৮০\n                                        সালে\n                                        নির্মাণকাজ পুনরায় শুরু করেন, যদিও তা সমাপ্ত হয়নি। কেল্লার তিনটি স্থাপনার মধ্যে\n                                        একটি পরি\n                                        বিবির\n                                        সমাধি, শায়েস্তা খান তার কন্যার স্মরণে এই মাজার নির্মাণ করেন। ভেতরে আরও আছে তিন\n                                        গম্বুজ ওয়ালা\n                                        দুর্গ মসজিদ এবং দেওয়ান-ই-আম, যা কিনা মূলত সুবেদারদের বাস ভবন হিসেবে ব্যবহার করা\n                                        হতো।বর্তমানে\n                                        বাংলাদেশ প্রত্নতত্ত্ব অধিদপ্তরের আওতায় আছে দুর্গটি।",
+                "image": "/images/tourist_spot/1593450925.jpg"
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "বায়তুল মোকাররম মসজিদ",
+                "text": " বাংলাদেশের জাতীয় মসজিদ বায়তুল মোকাররম। ১৯৬৮ সালে এর নির্মাণকাজ সম্পন্ন হয়।\n                                        তৎকালীন\n                                        পাকিস্তানের\n                                        বিশিষ্ট শিল্পপতি লতিফ বাওয়ানি ও তার ভাতিজা ইয়াহিয়া বাওয়ানির উদ্যোগে এই মসজিদ\n                                        নির্মাণ করা হয়।\n                                        এখানে একসাথে ৪০ হাজার মুসল্লি নামাজ আদায় করতে পারে, ধারণক্ষমতার দিক দিয়ে এটি\n                                        পৃথিবীর ১০ম\n                                        বৃহত্তম\n                                        মসজিদ। এর আয়তন ২৬৯৪.১৯ বর্গ মিটার, উচ্চতা ৩০.১৮ মিটার। এর অবকাঠামো মক্কা শরীফের\n                                        কাবার মতো,\n                                        বিশাল\n                                        এলাকা জুড়ে বাগান এই সৌন্দর্যবর্ধন করেছে। ঢাকার পল্টনে অবস্থিত এই মসজিদটি ৮ তালা,\n                                        নিচতলায়\n                                        বিশাল\n                                        মার্কেট, দুইতালা থেকে ছয়তালা পর্যন্ত প্রতি তালায় নামাজ পড়া হয়।",
+                "image": "/images/tourist_spot/1593452603.jpg"
+            },
+            {
+                "title": "",
+                "text": "",
+                "image": ""
+            },
+            {
+                "title": "ষাট গম্বুজ মসজিদ",
+                "text": "বাংলাদেশের বাগেরহাট জেলায় অবস্থিত একটি প্রাচীন মসজিদ ষাট গম্বুজ মসজিদ। মসজিদের\n                                        গায়ে কোন\n                                        শিলালিপি\n                                        না থাকায় এর নির্মাতা সম্পর্কে জানা যায় না। স্থাপত্যশৈলী দেখে ধারণা করা হয় এটি\n                                        খান জাহান আলী\n                                        তৈরি\n                                        করেছিলেন, ১৫শ শতাব্দীতে। রাজমহল থেকে পাথর আনা হয়েছিলো এটি নির্মাণ করতে। ১৯৮৩\n                                        সালে ইউনেস্কো\n                                        এই\n                                        মসজিদকে বিশ্ব ঐতিহ্যবাহী স্থানের মর্যাদা দেয়।এই মসজিদে গম্বুজের সংখ্যা ৮১ টি,\n                                        কালের বিবর্তনে\n                                        ষাট\n                                        গম্বুজ লোকমুখে প্রচলিত হয়ে যায়। তুঘলকি ও জৌনপুরী নির্মানশৈলী এতে সুস্পষ্ট। কারও\n                                        কারও মতে,\n                                        খান-ই-জাহান এই মসজিদটিকে নামাজের কাজ ছাড়াও দরবার ঘর হিসেবে ব্যবহার করতেন। কেউ\n                                        কেউ বলেন,\n                                        মসজিদটি\n                                        মাদ্রাসা হিসেবেও ব্যবহৃত হতো।",
+                "image": "/images/tourist_spot/1593451321.jpg"
+            },
+            {
+                "title": "যমুনা",
+                "text": "বব্রক্ষ্মপুত্র নদীর প্রধান শাখা যমুনা। উৎপত্তি স্থল থেকে ২৪০ কিলোমিটার দৈর্ঘ্যের এই নদী রাজশাহী, ঢাকা ও ময়মনসিংহ বিভাগের মধ্য দিয়ে গিয়েছে। তিস্তা, ধরলা, করতোয়া, আত্রাই এবং সুবর্ণশ্রী হলো যমুনার প্রধান উপনদী সমূহ।",
+                "image": "/images/tourist_spot/1592209658.jpg"
+            },
+            {
+                "title": "করতোয়া",
+                "text": "পশ্চিম বঙ্গের জলপাই গুড়ি জেলা এবং বাংলাদেশের উত্তর – পশ্চিমাঞ্চলের পঞ্চগড় ও দিনাজপুর জেলার মধ্য দিয়ে প্রবাহিত নদী করতোয়া। এর বাংলাদেশ অংশের দৈর্ঘ্য ১৮৭ কিলোমিটার, গড়প্রস্থ ১৩৫ মিটার।",
+                "image": "/images/tourist_spot/1592209822.jpg"
+            },
+            {
+                "title": "পদ্মা",
+                "text": " হিমালয়ে উৎপন্ন গঙ্গা নদীর প্রধান শাখা এবং বাংলাদেশের তৃতীয় দীর্ঘতম নদী। পদ্মার সর্বোচচ গভীরতা ৪৭৯ মিটার, গড়গভীরতা ২৯৫ মিটার। ৩৬৬ কিলোমিটার দৈর্ঘ্যের এই নদী স্পর্শ করেছে বাংলাদেশের ১১ টি জেলাকে।",
+                "image": "/images/tourist_spot/1592205999.jpg"
+            },
+            {
+                "title": "কুমারনদ",
+                "text": "বাংলাদেশের দক্ষিণ-পশ্চিমাঞ্চলের চুয়াডাঙ্গা জেলা, কুষ্টিয়া জেলা, ঝিনাইদহ জেলা ও মাগুরা জেলায় অবস্থিত কুমার নদ। এর দৈর্ঘ্য ১২৪ কিলোমিটার, গড় প্রস্থ ৭৫ মিটার। এর উৎস মাথা ভাঙ্গা নদী, মোহনা নব গঙ্গা নদী।",
+                "image": "/images/tourist_spot/1592210685.jpg"
+            },
+            {
+                "title": "শীতলক্ষ্যা",
+                "text": "বাংলাদেশের উত্তর কেন্দ্রীয় অঞ্চলের নরসিংদী, গাজীপুর, ঢাকা এবং নারায়ণ গঞ্জ জেলার একটি নদী। এর দৈর্ঘ্য ১০৮ কিলোমিটার, গড় প্রস্থ ২২৮ মিটার। ব্রহ্মপুত্র নদের একটি উপনদী এই শীতলক্ষ্যা।",
+                "image": "/images/tourist_spot/1592210359.jpg"
+            },
+            {
+                "title": " ব্রহ্মপুত্রনদ",
+                "text": " হিমালয় পর্বত মালার কৈলাস শৃঙ্গের মানস সরোবর হিমবাহ থেকে উৎপন্ন হয়ে তিব্বত ও আসামের মধ্য দিয়ে প্রবাহিত হয়ে কুড়ি গ্রামের ভেতর দিয়ে বাংলাদেশে প্রবেশ করেছে। ২৮৫০ কিলোমিটার দৈর্ঘ্যের এই নদী বাংলাদেশের নদী গুলোর মধ্যে সব চেয়ে দীর্ঘ পথ অতিক্রম করেছে।",
+                "image": "/images/tourist_spot/1592209973.jpg"
+            },
+            {
+                "title": "গোমতী",
+                "text": "গঙ্গা নদীর একটি শাখা নদী গোমতী। ভারতের ত্রিপুরা রাজ্যে উৎপন্ন হয়ে বাংলাদেশের কুমিল্লা জেলা হয়ে মেঘনা নদীতে পতিত হয়েছে। বাংলাদেশ অংশে নদীটির দৈর্ঘ্য ৮৩ কিলোমিটার।",
+                "image": "/images/tourist_spot/1592210531.jpg"
+            },
+            {
+                "title": "মেঘনা",
+                "text": "মেঘনার দৈর্ঘ্য ১৫৬ কিলোমিটার, বাংলাদেশের গভীর ও প্রশস্ত তম নদী। ৮ টি জেলার মধ্য দিয়ে যাওয়া এই নদীর উৎস বরাক নদী। এর গড় প্রস্থ ৩৪০০ মিটার, প্রকৃতি সর্পিলাকার।",
+                "image": "/images/tourist_spot/1592209213.jpg"
+            },
+            {
+                "title": "কর্ণফুলী",
+                "text": "বাংলাদেশ-ভারতের আন্তঃসীমান্ত নদী। বাংলাদেশ অংশের দৈর্ঘ্য ১৬১ কিলোমিটার, গড় প্রস্থ ৪৫৩ মিটার। ভারতের মিজোরাম হতে শুরু হয়ে পার্বত্য চট্টগ্রাম ও চট্টগ্রাম হয়ে বঙ্গোপসাগরে মিলিত হয়েছে। রাঙ্গামাটি জেলার কাপ্তাই বাঁধ এই নদীর উপর নির্মিত হয়।",
+                "image": "/images/tourist_spot/1592210176.JPG"
+            },
+            {
+                "title": "পশুরনদী",
+                "text": "বাংলাদেশের দক্ষিণ-পশ্চিমাঞ্চলের খুলনা ও বাগেরহাট জেলার একটি নদী পশুর নদী। এর দৈর্ঘ্য ১০৪ কিলোমিটার, গড় প্রস্থ ১১৬৪ মিটার। এটি গঙ্গা জল প্রবাহের একটি ধারা, খুলনা ও বাগেরহাট জেলার মাঝে অবস্থিত। সুন্দর বনের কাছে শিবসা নদীর সাথে মিলিত হয়েছে এ ইনদী",
+                "image": "/images/tourist_spot/1592210908.jpg"
+            },
+            {
+                "title": "দুমলং",
+                "text": "ুমলং এর অবস্থান রাঙামাটি জেলার বিলাই ছড়ি উপজেলায়। । উচচতা ৩৩১৪ ফুট। এটা রাঙামাটির সর্বোচচ চূড়া। ২০১১ সালে নেচার অ্যাড ভেনচার ক্লাব দ্বারা চূড়া অভিযানে রসময় উচচতা মাপা হয়।",
+                "image": ""
+            },
+            {
+                "title": "তাজিওডং",
+                "text": "বিজয় নামে ও পরিচিত এই পর্বত শৃঙ্গ সরকারিভাবে বাংলাদেশের সর্বোচচ পর্বত শৃঙ্গ। বান্দরবান জেলার রুমা উপজেলার সাইচল পর্বত সারিতে অবস্থিত এই পর্বতের উচচতা ১২৮০ মিটারবা ৪১৯৮ ফুট।",
+                "image": ""
+            },
+            {
+                "title": "সাকাহাফং",
+                "text": " অনানুষ্ঠানিক ভাবে বাংলাদেশের সর্বোচচ চূড়া, এর উচচতা ১০৫৬ মিটার। অবস্থান বান্দরবান জেলার থানচিতে। মোদক তুয়াং নামে ও পরিচিত এই পর্বত, ২০০৫ সালে জিংফুলেন নামক ইংরেজ পর্বতারোহী সর্বপ্রথম আরোহন করেন এই চূড়ায়।",
+                "image": "/images/tourist_spot/1592207080.jpg"
+            },
+            {
+                "title": "কেওক্রাডং",
+                "text": "বান্দর বান জেলার রুমায় অবস্থিত এই পর্বতের উচচতা ৯৮৬ মিটার। কেওক্রাডং বাংলাদেশের সব চেয়ে জন প্রিয় ট্র্যাকিং রুট।",
+                "image": "/images/tourist_spot/1592208010.jpg"
+            },
+            {
+                "title": "জোগিহাফং",
+                "text": " এর উচচতা ৯৯১ মিটার, অবস্থান বান্দর বান জেলার থানচিতে। ২০১২ সালে প্রথম আরোহন করা হয় এই পর্বত চূড়ায়।",
+                "image": "/images/tourist_spot/1592207872.jpg"
+            },
+            {
+                "title": "নাসাইহুম",
+                "text": "নাসাইহুম পর্বত অবস্থিত বান্দর বান জেলার থানচি উপজেলায়।৯১৬ মিটার উচচতা বিশিষ্ট এই পর্বত বাংলাদেশের দক্ষিণ-পূর্ব কোণের সর্ব শেষ বিন্দু।",
+                "image": "/images/tourist_spot/1592208997.jpg"
+            }
+        ];
+    $(document).ready(function(e) {
+        //console.log("jquery");
+        $('.hoverPoint').click(function(){
+            //console.log(mapDataJson);
+            var content_id = $(this).attr('id');
+
+            //console.log(content_id);
+            var title = mapDataJson[content_id].title;
+            var text = mapDataJson[content_id].text;
+            var image = mapDataJson[content_id].image;
+            var is_mobile = false;
+            if( $('#some-element').css('display')=='none') {
+                is_mobile = true;
+            }
+
+            // now I can use is_mobile to run javascript conditionally
+
+            if (is_mobile !== true) {
+                var leftpixel = $(this).position().left + 'px';
+            }
+            var content = '<img src="'+image+'" style="max-width: 300px;"><h3 style="text-align: center;">'+title+'</h3><p class="place-text">'+text+'</p><br/><button class="btn btn-danger tooltip-close pull-right">Close</button>';
+            $('#tooltip')
+                .css({
+                    top: ($(this).position().top-30) + 'px',
+                    left: leftpixel
+                }).html( content ).show();
+            $('.tooltip-close').click(function(){
+                $('#tooltip').hide();
+            });
+        });
+
+    });
+</script>
+
+<div class="col-md-12">
+
+
+    <div class=" margin_60">
+
+        <div class="row">
+
+            <aside class="col-lg-3  wow zoomIn" data-wow-delay="0.2s">
+                <div id="some-element"></div>
+                <p>
+                    <a class="btn_map" href="/explore-bangladesh">View
+                        on map</a>
+                </p>
+
+                <div class="box_style_cat">
+                    <ul id="cat_nav">
+                        {{--@foreach($categories as $category)
+                        <li onclick="myFunction({{$category->spot_category_id}})"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>{{$category->en_name}}
+                            --}}{{-- <span>(20)</span>--}}{{--</a>
+                        </li>
+                        @endforeach--}}
+
+                        <li onclick="myFunction(4)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Explore Bangladesh
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+
+                        <li onclick="myFunction(1)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Festival
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+                        <li onclick="myFunction(2)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Forest
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+                        <li onclick="myFunction(3)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Heritage
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+
+                        <li onclick="myFunction(5)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Rivers
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+
+                        <li onclick="myFunction(6)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Mountains
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+
+                        <li onclick="myFunction(7)"><a href="#"><i
+                                class="icon_set_1_icon-3"></i>Pride of Bangladesh
+                            {{-- <span>(20)</span>--}}</a>
+                        </li>
+
+
+
+                    </ul>
+                </div>
+
+
+            </aside>
+
+
+            <div class="col-md-7" >
+
+                <img src="/images/explore/Explore-Bangladesh-Map4.png" width="100%" class="" id="maps_id" usemap="#planetmap" style="background: url('images/explore/map-background.png');"/>
+                {{--  <img src="/images/explore/tttt.gif" width="100%" id="maps_id"/>--}}
+                <div id="map-pointer-1" class="map-pointers" style="display: none;">
+                    <a href="javascript:void(0)" id="4" class="hoverPoint" title="" style="position: absolute; left: 25%; top: 37.13%; width: 8.16%; height: 5.93%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="5" class="hoverPoint" title="" style="position: absolute; left: 48.19%; top: 32.31%; width: 8.68%; height: 6.3%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="6" class="hoverPoint" title="" style="position: absolute; left: 44.17%; top: 46.94%; width: 6.35%; height: 5.09%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="7" class="hoverPoint" title="" style="position: absolute; left: 53.63%; top: 49.35%; width: 5.96%; height: 5.65%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="8" class="hoverPoint" title="" style="position: absolute; left: 26.04%; top: 54.91%; width: 5.18%; height: 5%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="9" class="hoverPoint" title="" style="position: absolute; left: 20.08%; top: 58.8%; width: 4.53%; height: 5.28%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="10" class="hoverPoint" title="" style="position: absolute; left: 25.26%; top: 64.17%; width: 4.27%; height: 4.54%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="11" class="hoverPoint" title="" style="position: absolute; left: 26.17%; top: 71.94%; width: 5.83%; height: 5.09%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="12" class="hoverPoint" title="" style="position: absolute; left: 85.36%; top: 67.69%; width: 6.87%; height: 5.46%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="13" class="hoverPoint" title="" style="position: absolute; left: 85.75%; top: 75.83%; width: 6.61%; height: 5%; z-index: 2;"></a>
+                </div>
+                <div id="map-pointer-2" class="map-pointers" style="display: none;">
+                    <a href="javascript:void(0)" id="14" class="hoverPoint" title="" style="position: absolute; left: 67.88%; top: 33.24%; width: 5.31%; height: 4.54%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="15" class="hoverPoint" title="" style="position: absolute; left: 73.96%; top: 35.93%; width: 5.18%; height: 5%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="16" class="hoverPoint" title="" style="position: absolute; left: 80.57%; top: 33.33%; width: 5.96%; height: 5%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="17" class="hoverPoint" title="" style="position: absolute; left: 81.35%; top: 62.87%; width: 5.83%; height: 5.19%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="18" class="hoverPoint" title="" style="position: absolute; left: 88.6%; top: 73.61%; width: 5.44%; height: 5.28%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="19" class="hoverPoint" title="" style="position: absolute; left: 81.09%; top: 72.22%; width: 5.44%; height: 5.37%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="20" class="hoverPoint" title="" style="position: absolute; left: 82.64%; top: 83.33%; width: 6.87%; height: 5.28%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="21" class="hoverPoint" title="" style="position: absolute; left: 24.35%; top: 69.91%; width: 6.99%; height: 5.83%; z-index: 2;"></a>
+                </div>
+                <div id="map-pointer-3" class="map-pointers" style="display: none;">
+                    <a href="javascript:void(0)" id="22" class="hoverPoint" title="" style="position: absolute; left: 19.17%; top: 13.89%; width: 5.44%; height: 4.91%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="23" class="hoverPoint" title="" style="position: absolute; left: 29.02%; top: 17.5%; width: 5.18%; height: 5%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="24" class="hoverPoint" title="" style="position: absolute; left: 45.6%; top: 37.13%; width: 5.96%; height: 5%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="25" class="hoverPoint" title="" style="position: absolute; left: 41.58%; top: 43.61%; width: 5.83%; height: 5.19%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="26" class="hoverPoint" title="" style="position: absolute; left: 54.15%; top: 51.3%; width: 5.44%; height: 5.28%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="27" class="hoverPoint" title="" style="position: absolute; left: 50.65%; top: 42.87%; width: 5.44%; height: 5.37%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="28" class="hoverPoint" title="" style="position: absolute; left: 82.64%; top: 83.33%; width: 6.87%; height: 5.28%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="29" class="hoverPoint" title="" style="position: absolute; left: 28.5%; top: 65%; width: 6.99%; height: 5.83%; z-index: 2;"></a>
+                </div>
+                <div id="map-pointer-4" class="map-pointers" style="display: none;">
+                </div>
+                <div id="map-pointer-5" class="map-pointers" style="display: none;">
+                    <a href="javascript:void(0)" id="30" class="hoverPoint" title="" style="position: absolute; left: 20.34%; top: 19.35%; width: 3.89%; height: 3.06%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="31" class="hoverPoint" title="" style="position: absolute; left: 28.5%; top: 21.02%; width: 3.63%; height: 3.8%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="32" class="hoverPoint" title="" style="position: absolute; left: 22.8%; top: 43.52%; width: 5.05%; height: 3.98%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="33" class="hoverPoint" title="" style="position: absolute; left: 22.28%; top: 48.8%; width: 5.31%; height: 3.61%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="34" class="hoverPoint" title="" style="position: absolute; left: 45.21%; top: 47.31%; width: 5.44%; height: 3.98%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="35" class="hoverPoint" title="" style="position: absolute; left: 60.36%; top: 39.07%; width: 5.31%; height: 4.17%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="36" class="hoverPoint" title="" style="position: absolute; left: 65.28%; top: 51.11%; width: 4.53%; height: 3.8%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="37" class="hoverPoint" title="" style="position: absolute; left: 51.94%; top: 51.48%; width: 5.57%; height: 3.89%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="38" class="hoverPoint" title="" style="position: absolute; left: 81.99%; top: 63.61%; width: 4.53%; height: 3.98%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="39" class="hoverPoint" title="" style="position: absolute; left: 31.48%; top: 69.54%; width: 4.92%; height: 3.89%; z-index: 2;"></a>
+                </div>
+                <div id="map-pointer-6" class="map-pointers" style="display: none;">
+                    <a href="javascript:void(0)" id="40" class="hoverPoint" title="" style="position: absolute; left: 91.58%; top: 67.41%; width: 3.89%; height: 2.96%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="41" class="hoverPoint" title="" style="position: absolute; left: 91.19%; top: 71.02%; width: 2.59%; height: 2.78%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="42" class="hoverPoint" title="" style="position: absolute; left: 94.3%; top: 72.31%; width: 2.59%; height: 2.78%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="43" class="hoverPoint" title="" style="position: absolute; left: 87.44%; top: 72.22%; width: 3.76%; height: 3.15%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="44" class="hoverPoint" title="" style="position: absolute; left: 94.3%; top: 76.48%; width: 3.76%; height: 3.15%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="45" class="hoverPoint" title="" style="position: absolute; left: 96.24%; top: 85.74%; width: 3.37%; height: 3.15%; z-index: 2;"></a>
+                </div>
+                <div id="map-pointer-7" class="map-pointers" style="display: none;">
+                    <a href="javascript:void(0)" id="0" class="hoverPoint" title="" style="position: absolute; left: 79.66%; top: 26.39%; width: 6.35%; height: 5.19%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="1" class="hoverPoint" title="" style="position: absolute; left: 10.49%; top: 29.26%; width: 6.48%; height: 5.37%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="2" class="hoverPoint" title="" style="position: absolute; left: 79.66%; top: 63.98%; width: 6.87%; height: 4.91%; z-index: 2;"></a>
+                    <a href="javascript:void(0)" id="3" class="hoverPoint" title="" style="position: absolute; left: 25.39%; top: 59.44%; width: 6.35%; height: 5.46%; z-index: 2;"></a>
+                </div>
+
+                <div id="tooltip" style="max-width: 310px;"></div>
+
+            </div>
+
+
+            <!--<div class="col-md-3 box_style_1 wow zoomIn" data-wow-delay="0.4s"
+                 style="max-height: 450px;  overflow-x: scroll;">
+
+
+                <div id="map_text">
+                    <h4>Explorer Bangladesh</h4>
+                    <br>
+                    “I HAVE FOUND ADVENTURE IN FLYING, IN WORLD TRAVEL, IN BUSINESS, AND EVEN CLOSE AT HAND…
+                    ADVENTURE IS A STATE OF MIND- AND SPIRIT,
+                    <br>
+                    -Jacqueline Cochran
+
+
+                </div>
+
+
+                <div id="forest">
+                    <h4><strong>বন</strong></h4>
+
+                    <div id="forest1" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest2" href="#collapseOne_forest2" aria-expanded="false">
+                                        <div class="headliness">
+                                            সুন্দরবন
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+
+
+                            </div>
+                            <div id="collapseOne_forest1" class="collapse" data-parent="#forest1" style="">
+                                <div class="card-body">
+
+                                    বাংলাদেশের খুলনা, সাতক্ষীরা ও বাগেরহাট জেলা জুড়ে অবস্থিত পৃথিবীর সবচেয়ে বড়
+                                    ম্যানগ্রোভ বন
+                                    সুন্দরবন। আয়তনে ১০ হাজার বর্গ কিলোমিটার, যার ৬০১৭ বর্গ কিলোমিটার বাংলাদেশের অংশে
+                                    অবস্থিত,
+                                    বাদবাকি অংশ ভারতের অন্তর্গত। প্রকৃতির অপার বিস্ময় এই বন ১৯৯৭ সালে ইউনেস্কো
+                                    কর্তৃক বিশ্ব
+                                    ঐতিহ্যবাহী স্থান এর স্বীকৃতি পায়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="forest2" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest2" href="#collapseOne_forest2" aria-expanded="false">
+                                        <div class="headliness">
+                                            রেমা কালেঙ্গাঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forest2" class="collapse" data-parent="#forest2" style="">
+                                <div class="card-body">
+                                    রেমা কালেঙ্গা বন্যপ্রাণ অভয়ারণ্য দেশের সংরক্ষিত বনাঞ্চলের মাঝে অন্যতম।
+                                    সুন্দরবনের পর দেশের
+                                    সবচেয়ে বড় প্রাকৃতিক বনভূমি রেমা কালেঙ্গা। সিলেট বিভাগের হবিগঞ্জ জেলার চুনারুঘাট
+                                    উপজেলার
+                                    অন্তর্গত
+                                    এই অভয়ারণ্য প্রতিষ্ঠা করা হয় ১৯৮২ সালে।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="forset3" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forset3" href="#collapseOne_forset3" aria-expanded="false">
+                                        <div class="headliness"> লাউয়াছড়া জাতীয় উদ্যানঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forset3" class="collapse" data-parent="#forset3" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের চিরহরিৎ বনের সংরক্ষিত বনাঞ্চল লাউয়াছড়া জাতীয় উদ্যান। মৌলভীবাজার জেলার
+                                    কমলগঞ্জ
+                                    উপজেলায়
+                                    এর অবস্থান। ১২৫০ হেক্টর আয়তনের এই উদ্যান জীববৈচিত্র‍্যে ভরপুর। ১৯৯৭ সালে
+                                    লাউয়াছড়াকে জাতীয়
+                                    উদ্যান
+                                    ঘোষণা করা হয়। বিলুপ্তপ্রায় উল্লুক সহ মুখপোড়া হনুমান, বানর, শেয়াল, মেছোবাঘ, ভালুক
+                                    ও মায়া
+                                    হরিণের
+                                    আবাসস্থল লাউয়াছড়া।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="forest4" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest4" href="#collapseOne_forest4" aria-expanded="false">
+                                        <div class="headliness"> সাতছড়ি জাতীয় উদ্যানঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forest4" class="collapse" data-parent="#forest4" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের অন্যতম প্রাকৃতিক উদ্যান সাতছড়ি প্রাকৃতিক উদ্যান। ২৪৩ হেক্টর আয়তন
+                                    বিশিষ্ট এই
+                                    বনভূমি
+                                    ২০০৫ খ্রিষ্টাব্দে প্রতিষ্ঠা করা হয়। এর আগের নাম ছিলো রঘুনন্দন হিল রিজার্ভ
+                                    ফরেস্ট। ভেতরে
+                                    সাতটি
+                                    ছড়া থাকায় পরবর্তীতে এর নামকরণ হয় সাতছড়ি।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="forest5" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest5" href="#collapseOne_forest5" aria-expanded="false">
+                                        <div class="headliness"> দুধপুকুরিয়া- ধোপাছড়ি বন্যপ্রাণ অভয়ারণ্যঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forest5" class="collapse" data-parent="#forest5" style="">
+                                <div class="card-body">
+                                    এই বন্যপ্রাণ অভয়ারণ্য বাংলাদেশের চট্টগ্রাম জেলায় অবস্থিত। ২০১০ সালের ৬ এপ্রিল এর
+                                    উদবোধন করা
+                                    হয়।
+                                    এর আয়তন ৪৭১৬.৫৭ হেক্টর। বিভিন্ন প্রজাতির জীব জন্তুতে সমৃদ্ধ এই বন্যপ্রাণ
+                                    অভয়ারণ্য।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="forest6" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest6" href="#collapseOne_forest6" aria-expanded="false">
+                                        <div class="headliness">
+                                            চুনতি বন্যপ্রাণ অভয়ারণ্যঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forest6" class="collapse" data-parent="#forest6" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের সংরক্ষিত বনাঞ্চল ও অভয়ারণ্য। চট্টগ্রাম থেকে ৭০ কিলোমিটার দক্ষিণে
+                                    চট্টগ্রাম
+                                    কক্সবাজার
+                                    মহাসড়কের পাশে এর অবস্থান। এর আয়তন ৭৭৬৪ হেক্টর। প্রায় ১২০০ প্রজাতির উদ্ভিদ ও ১৭৮
+                                    প্রজাতির
+                                    জীবজন্তু ও পাখি নিয়ে এই বনাঞ্চল সমৃদ্ধ ।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="forest7" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest7" href="#collapseOne_forest7" aria-expanded="false">
+                                        <div class="headliness">
+                                            টেকনাফ বন্যপ্রাণ অভয়ারণ্যঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forest7" class="collapse" data-parent="#forest7" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের একমাত্র গেম রিজার্ভ বন। ১১,৬১৫ হেক্টর জায়গা নিয়ে প্রতিষ্ঠিত এই
+                                    অভয়ারণ্য বন্য
+                                    হাতির
+                                    আবাসস্থল বলে পরিচিত। ১৯৮৩ খ্রিষ্টাব্দে প্রতিষ্ঠা হয় এই বনাঞ্চলের। কক্সবাজার
+                                    জেলার টেকনাফে এর
+                                    অবস্থান। এর অভ্যন্তরে নাইটং পাহাড়, কুদুম গুহা, কুঠি পাহাড়, তৈঙ্গা চূড়াসহ বিভিন্ন
+                                    আকর্ষণীয়
+                                    স্থান
+                                    রয়েছে। এই অভয়ারণ্যের জীববৈচিত্র্য বাংলাদেশের মাঝে সর্বাধিক।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="forest8" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#forest8" href="#collapseOne_forest8" aria-expanded="false">
+                                        <div class="headliness">
+                                            হিমছড়ি জাতীয় উদ্যানঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_forest8" class="collapse" data-parent="#forest8" style="">
+                                <div class="card-body">
+                                    চট্টগ্রাম বিভাগের কক্সবাজার জেলার হিমছড়িতে এর অবস্থান। ১৯৮০ সালে প্রতিষ্ঠা করা
+                                    হয় এই
+                                    বনাঞ্চলের,
+                                    ১৭২৯ হেক্টর আয়তন বিশিষ্ট এই জাতীয় উদ্যান প্রতিষ্ঠিত হয় গবেষণা ও শিক্ষা, পর্যটন ও
+                                    বিনোদনকেন্দ্র
+                                    এবং বন্যপ্রাণী সংরক্ষণের জন্য।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="festival">
+                    <h4><strong> উৎসব</strong></h4>
+
+
+                    <div id="festival1" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#festival1" href="#collapseOne_festival1" aria-expanded="false">
+                                        <div class="headliness"> পহেলা বৈশাখ, মঙ্গল শোভাযাত্রাঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_festival1" class="collapse" data-parent="#festival1" style="">
+                                <div class="card-body">
+                                    বাংলা পঞ্জিকা অনুসারে, বৈশাখের ১ তারিখ, বাঙালিদের সর্বজনীন লোকউৎসব পহেলা বৈশাখ
+                                    পালন করা হয়।
+                                    এই
+                                    দিনে শোভাযাত্রা, মেলা, পান্তাভাত খাওয়া, হালখাতা খোলা সহ বিভিন্ন কর্মকান্ড উদযাপন
+                                    করা হয়।
+                                    ঢাকা
+                                    বিশ্ববিদ্যালয়ের চারুকলা বিভাগ থেকে আয়োজন করা হয় মঙ্গল শোভাযাত্রা।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="festival2" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#festival2" href="#collapseOne_festival2" aria-expanded="false">
+                                        <div class="headliness"> সাকরাইনঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_festival2" class="collapse" data-parent="#festival2" style="">
+                                <div class="card-body">
+                                    এই উৎসব মূলত পৌষসংক্রান্তি, যা ঘুড়ি উৎসব নামেও পরিচিত। সংস্কৃত শব্দ সংক্রান্তি
+                                    ঢাকাইয়া
+                                    অপভ্রংশে
+                                    সাকরাইন নাম নিয়েছে। পৌষ মাসের শেষদিন এই উৎসব পালন করা হয়। হাজারো মানুষের
+                                    উপস্থিতিতে পুরান
+                                    ঢাকার
+                                    এই উৎসব বর্ণিল হয়ে উঠে। সুপ্রাচীন এই উৎসব ঐক্য ও বন্ধুত্বের প্রতীক বলে বিবেচনা
+                                    করা হয়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="festival4" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#festival4" href="#collapseOne_festival4" aria-expanded="false">
+
+                                        <div class="headliness">
+
+                                            জব্বারের বলীখেলাঃ
+                                        </div>
+
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_festival4" class="collapse" data-parent="#festival4" style="">
+                                <div class="card-body">
+                                    জব্বারের বলীখেলা এক বিশেষ ধরণের কুস্তি খেলা, যা চট্টগ্রামের লালদিঘী ময়দানে
+                                    প্রতিবছর ১২ই
+                                    বৈশাখ
+                                    অনুষ্ঠিত হয়। এই খেলায় অংশগ্রহণকারীদের বলা হয় বলী। ১৯০৯ সালে চট্টগ্রামের ধনাঢ্য
+                                    ব্যবসায়ী
+                                    আব্দুল
+                                    জব্বার সওদাগর এই খেলার আয়োজন করেন।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="festival5" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#festival5" href="#collapseOne_festival5" aria-expanded="false">
+
+                                        <div class="headliness"> বৈসাবি উৎসবঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_festival5" class="collapse" data-parent="#festival5" style="">
+                                <div class="card-body">
+                                    পার্বত্য চট্টগ্রাম এলাকার প্রধান ৩ টি আদিবাসী সমাজের বর্ষবরণ উৎসব বৈসাবি।
+                                    ত্রিপুরাদের কাছে
+                                    বৈসু,
+                                    মারমাদের কাছে সাংগ্রাই, চাকমা ও তঞ্চঙ্গাদের কাছে বিজু নামে পরিচিত। বৈসাবি নামকরণ
+                                    হয়েছে এই
+                                    তিনটি
+                                    উৎসবের আদ্যক্ষরগুলো নিয়ে।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div id="heritage">
+                    <h4><strong> ঐতিহ্যবাহী স্থান (Historic Places)</strong></h4>
+
+
+                    <div id="heritage1" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage1" href="#collapseOne_heritage1" aria-expanded="false">
+
+                                        <div class="headliness"> লালবাগ কেল্লা</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage1" class="collapse" data-parent="#heritage1" style="">
+                                <div class="card-body">
+                                    ঢাকার দক্ষিণ- পশ্চিমাঞ্চলে বুড়িগঙ্গা নদীর তীরে অবস্থিত একটি মুঘল দুর্গের নাম
+                                    লালবাগ কেল্লা।
+                                    ১৬৭৮
+                                    সালে মুঘল সুবাদার মুহাম্মদ আজম শাহ এর নির্মাণকাজ শুরু করেন। মুঘল সুবাদার
+                                    শায়েস্তা খাঁ ১৬৮০
+                                    সালে
+                                    নির্মাণকাজ পুনরায় শুরু করেন, যদিও তা সমাপ্ত হয়নি। কেল্লার তিনটি স্থাপনার মধ্যে
+                                    একটি পরি
+                                    বিবির
+                                    সমাধি, শায়েস্তা খান তার কন্যার স্মরণে এই মাজার নির্মাণ করেন। ভেতরে আরও আছে তিন
+                                    গম্বুজ ওয়ালা
+                                    দুর্গ মসজিদ এবং দেওয়ান-ই-আম, যা কিনা মূলত সুবেদারদের বাস ভবন হিসেবে ব্যবহার করা
+                                    হতো।বর্তমানে
+                                    বাংলাদেশ প্রত্নতত্ত্ব অধিদপ্তরের আওতায় আছে দুর্গটি।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="heritage2" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage2" href="#collapseOne_heritage2" aria-expanded="false">
+
+                                        <div class="headliness"> স্মৃতিসৌধঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage2" class="collapse" data-parent="#heritage2" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের স্বাধীনতা যুদ্ধের শহিদদের স্মৃতির উদ্দেশ্যে নিবেদিত একটি স্মারক
+                                    স্থাপনা। এর নকশা
+                                    প্রণয়ন করেছেন স্থপতি সৈয়দ মাইনুল হোসেন। মুক্তিযুদ্ধে নিহতদের দশটি গণকবর আছে
+                                    অভ্যন্তরে। ১৯৭৮
+                                    সালে
+                                    এর নির্মাণকাজ শুরু হয়, সমাপ্ত হয় ১৯৮২ সালে। এখানে সাতটি ত্রিভুজাকৃতির মিনারের
+                                    শিখরের মাধ্যমে
+                                    বাংলাদেশের মুক্তি সংগ্রামের সাতটি পর্যায় নির্দেশ করা হয়। ১৯৫২'র ভাষা আন্দোলন,
+                                    ১৯৫৪'র
+                                    যুক্তফ্রন্ট
+                                    নির্বাচন, ১৯৫৬'র শাসনতন্ত্র আন্দোলন, ১৯৬২'র শিক্ষা আন্দোলন, ১৯৬৬'র ছয় দফা
+                                    আন্দোলন, ১৯৬৯'র গণ
+                                    অভ্যুত্থান এবং ১৯৭১'র মহান মুক্তিযুদ্ধ— এই সাতটি ঘটনাকে স্বাধীনতা আন্দোলনের
+                                    পরিক্রমা হিসেবে
+                                    দেখানো হয়েছে স্মৃতিসৌধের সাতটি মিনারের মাধ্যমে। মিনারটি ৪৫ মিটার উঁচু, আয়তন ৮৪
+                                    একর।
+                                    স্মৃতিসৌধ
+                                    প্রাঙ্গনে আরও রয়েছে উন্মুক্ত মঞ্চ, হেলিপ্যাড এবং ক্যাফেটেরিয়া।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="heritage3" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage3" href="#collapseOne_heritage3" aria-expanded="false">
+
+                                        <div class="headliness"> কান্তজির মন্দিরঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage3" class="collapse" data-parent="#heritage3" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের দিনাজপুরে অবস্থিত একটি প্রাচীন মন্দির কান্তজীউ বা কান্তজির মন্দির।
+                                    এটি নবরত্ন
+                                    মন্দির
+                                    নামেও পরিচিত কারণ তিনতলাবিশিষ্ট এই মন্দিরে নয়টি চূড়া বা রত্ন ছিলো। দিনাজপুরের
+                                    মহারাজা
+                                    প্রাণনাথ
+                                    রায় তার শেষ বয়সে মন্দিরের কাজ শুরু করেন, তার পোষ্যপুত্র মহারাজা রামনাথ রায় ১৭৫২
+                                    খ্রিস্টাব্দে
+                                    এটি
+                                    নির্মাণ সম্পন্ন করেন। ৭০ ফুট উচ্চতার এই মন্দিরের নয়টি চূড়া ১৮৯৭ খ্রিষ্টাব্দের
+                                    ভূমিকম্পে ভেঙে
+                                    যায়। এই মন্দিরের গায়ে পোড়ামাটির অলংকরণে ফুটিয়ে তোলা হয়েছে পৌরাণিক কাহিনিসমূহ।
+                                    বাংলাদেশের
+                                    সর্বোৎকৃষ্ট টেরাকোটা শিল্পের নিদর্শন এই মন্দির।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="heritage4" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage4" href="#collapseOne_heritage4" aria-expanded="false">
+
+                                        <div class="headliness">
+                                            ষাট গম্বুজ মসজিদঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage4" class="collapse" data-parent="#heritage4" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের বাগেরহাট জেলায় অবস্থিত একটি প্রাচীন মসজিদ ষাট গম্বুজ মসজিদ। মসজিদের
+                                    গায়ে কোন
+                                    শিলালিপি
+                                    না থাকায় এর নির্মাতা সম্পর্কে জানা যায় না। স্থাপত্যশৈলী দেখে ধারণা করা হয় এটি
+                                    খান জাহান আলী
+                                    তৈরি
+                                    করেছিলেন, ১৫শ শতাব্দীতে। রাজমহল থেকে পাথর আনা হয়েছিলো এটি নির্মাণ করতে। ১৯৮৩
+                                    সালে ইউনেস্কো
+                                    এই
+                                    মসজিদকে বিশ্ব ঐতিহ্যবাহী স্থানের মর্যাদা দেয়।এই মসজিদে গম্বুজের সংখ্যা ৮১ টি,
+                                    কালের বিবর্তনে
+                                    ষাট
+                                    গম্বুজ লোকমুখে প্রচলিত হয়ে যায়। তুঘলকি ও জৌনপুরী নির্মানশৈলী এতে সুস্পষ্ট। কারও
+                                    কারও মতে,
+                                    খান-ই-জাহান এই মসজিদটিকে নামাজের কাজ ছাড়াও দরবার ঘর হিসেবে ব্যবহার করতেন। কেউ
+                                    কেউ বলেন,
+                                    মসজিদটি
+                                    মাদ্রাসা হিসেবেও ব্যবহৃত হতো।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="heritage5" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage5" href="#collapseOne_heritage5" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            বায়তুল মোকাররম মসজিদঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage5" class="collapse" data-parent="#heritage5" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের জাতীয় মসজিদ বায়তুল মোকাররম। ১৯৬৮ সালে এর নির্মাণকাজ সম্পন্ন হয়।
+                                    তৎকালীন
+                                    পাকিস্তানের
+                                    বিশিষ্ট শিল্পপতি লতিফ বাওয়ানি ও তার ভাতিজা ইয়াহিয়া বাওয়ানির উদ্যোগে এই মসজিদ
+                                    নির্মাণ করা হয়।
+                                    এখানে একসাথে ৪০ হাজার মুসল্লি নামাজ আদায় করতে পারে, ধারণক্ষমতার দিক দিয়ে এটি
+                                    পৃথিবীর ১০ম
+                                    বৃহত্তম
+                                    মসজিদ। এর আয়তন ২৬৯৪.১৯ বর্গ মিটার, উচ্চতা ৩০.১৮ মিটার। এর অবকাঠামো মক্কা শরীফের
+                                    কাবার মতো,
+                                    বিশাল
+                                    এলাকা জুড়ে বাগান এই সৌন্দর্যবর্ধন করেছে। ঢাকার পল্টনে অবস্থিত এই মসজিদটি ৮ তালা,
+                                    নিচতলায়
+                                    বিশাল
+                                    মার্কেট, দুইতালা থেকে ছয়তালা পর্যন্ত প্রতি তালায় নামাজ পড়া হয়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="heritage6" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage6" href="#collapseOne_heritage6" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            মহাস্থানগড়ঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage6" class="collapse" data-parent="#heritage6" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের অন্যতম প্রাচীন পুরাকীর্তি মহাস্থানগড়। প্রসিদ্ধ এই নগরী ইতিহাসে
+                                    পুন্ড্রবর্ধন বা
+                                    পুন্ড্রনগর নামে পরিচিত ছিলো। যিশু খ্রিস্টের জন্মের ছয় হাজার বছর আগে এখানে সভ্যতা
+                                    গড়ে
+                                    উঠেছিলো, এক
+                                    সময় বাংলার রাজধানী ছিলো এই মহাস্থানগড়। ২০১৬ সালে এটি সার্কের রাজধানী হিসেবে
+                                    ঘোষণা হয়। কয়েক
+                                    শতাব্দী পর্যন্ত এ স্থান মৌর্য, গুপ্ত, পাল ও সেন শাসকবর্গের প্রাদেশিক রাজধানী
+                                    ছিলো। চীন ও
+                                    তিব্বত
+                                    থেকে ভিক্ষুরা তখন মহাস্থানগড় আসতেন লেখাপড়া করতে। বগুড়া জেলার শিবগঞ্জ উপজেলায়
+                                    মহাস্থানগড়ের
+                                    অবস্থান। ১৮০৮ সালে ফ্রান্সিস বুকানন হ্যামিলটন প্রথম মহাস্থানগড়ের অবস্থান চিহ্নিত
+                                    করেন। খোদার
+                                    পাথর ভিটা, মানকালীর ঢিবি, বৈরাগীর ভিটা, স্কন্ধের ধাপ, মঙ্গলকোট স্তুপ সহ বিভিন্ন
+                                    ঐতিহাসিক
+                                    নিদর্শন
+                                    মহাস্থানগড়ে ছড়িয়ে ছিটিয়ে আছে।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="heritage7" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#heritage7" href="#collapseOne_heritage7" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            বেহুলার বাসর ঘরঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_heritage7" class="collapse" data-parent="#heritage7" style="">
+                                <div class="card-body">
+                                    বেহুলার বাসর ঘর ঐতিহাসিক মহাস্থানগড়ে অবস্থিত। মহাস্থানগড় বাসস্ট্যান্ড থেকে প্রায়
+                                    ২ কি.মি.
+                                    দক্ষিণ
+                                    পশ্চিমে একটি বৌদ্ধ স্তম্ভ রয়েছে যা সম্রাট অশোক নির্মাণ করেছুলেন বলে ধারণা করা
+                                    হয়। স্তম্ভের
+                                    উচ্চতা প্রায় ৪৫ ফুট, এর পূর্বার্ধে রয়েছে ২৪ কোণ বিশিষ্ট চৌবাচ্চা সদৃশ গোসলখানা।
+                                    এটি বেহুলার
+                                    বাসর
+                                    ঘর নামেই পরিচিত।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+                <div id="river">
+                    <h4><strong> নদী (Rivers)</strong></h4>
+
+
+                    <div id="river1" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river1" href="#collapseOne_river1" aria-expanded="false">
+
+                                        <div class="headliness"> পদ্মা</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river1" class="collapse" data-parent="#river1" style="">
+                                <div class="card-body">
+                                    হিমালয়ে উৎপন্ন গঙ্গা নদীর প্রধান শাখা এবং বাংলাদেশের তৃতীয় দীর্ঘতম নদী। পদ্মার সর্বোচচ গভীরতা ৪৭৯ মিটার, গড়গভীরতা ২৯৫ মিটার। ৩৬৬ কিলোমিটার দৈর্ঘ্যের এই নদী স্পর্শ করেছে বাংলাদেশের ১১ টি জেলাকে।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river2" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river2" href="#collapseOne_river2" aria-expanded="false">
+
+                                        <div class="headliness"> মেঘনা</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river2" class="collapse" data-parent="#river2" style="">
+                                <div class="card-body">
+                                    মেঘনার দৈর্ঘ্য ১৫৬ কিলোমিটার, বাংলাদেশের গভীর ও প্রশস্ত তম নদী। ৮ টি জেলার মধ্য দিয়ে যাওয়া এই নদীর উৎস বরাক নদী। এর গড় প্রস্থ ৩৪০০ মিটার, প্রকৃতি সর্পিলাকার।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river3" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river3" href="#collapseOne_river3" aria-expanded="false">
+
+                                        <div class="headliness"> যমুনা</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river3" class="collapse" data-parent="#river3" style="">
+                                <div class="card-body">
+                                    বব্রক্ষ্মপুত্র নদীর প্রধান শাখা যমুনা। উৎপত্তি স্থল থেকে ২৪০ কিলোমিটার দৈর্ঘ্যের এই নদী রাজশাহী, ঢাকা ও ময়মনসিংহ বিভাগের মধ্য দিয়ে গিয়েছে। তিস্তা, ধরলা, করতোয়া, আত্রাই এবং সুবর্ণশ্রী হলো যমুনার প্রধান উপনদী সমূহ।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="river4" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river4" href="#collapseOne_river4" aria-expanded="false">
+
+                                        <div class="headliness">
+                                            করতোয়া
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river4" class="collapse" data-parent="#river4" style="">
+                                <div class="card-body">
+                                    পশ্চিম বঙ্গের জলপাই গুড়ি জেলা এবং বাংলাদেশের উত্তর – পশ্চিমাঞ্চলের পঞ্চগড় ও দিনাজপুর জেলার মধ্য দিয়ে প্রবাহিত নদী করতোয়া। এর বাংলাদেশ অংশের দৈর্ঘ্য ১৮৭ কিলোমিটার, গড়প্রস্থ ১৩৫ মিটার।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river5" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river5" href="#collapseOne_river5" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            ব্রহ্মপুত্রনদ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river5" class="collapse" data-parent="#river5" style="">
+                                <div class="card-body">
+                                    হিমালয় পর্বত মালার কৈলাস শৃঙ্গের মানস সরোবর হিমবাহ থেকে উৎপন্ন হয়ে তিব্বত ও আসামের মধ্য দিয়ে প্রবাহিত হয়ে কুড়ি গ্রামের ভেতর দিয়ে বাংলাদেশে প্রবেশ করেছে। ২৮৫০ কিলোমিটার দৈর্ঘ্যের এই নদী বাংলাদেশের নদী গুলোর মধ্যে সব চেয়ে দীর্ঘ পথ অতিক্রম করেছে।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river6" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river6" href="#collapseOne_river6" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            কর্ণফুলী
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river6" class="collapse" data-parent="#river6" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের উত্তর কেন্দ্রীয় অঞ্চলের নরসিংদী, গাজীপুর, ঢাকা এবং নারায়ণ গঞ্জ জেলার একটি নদী। এর দৈর্ঘ্য ১০৮ কিলোমিটার, গড় প্রস্থ ২২৮ মিটার। ব্রহ্মপুত্র নদের একটি উপনদী এই শীতলক্ষ্যা।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river7" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river7" href="#collapseOne_river7" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            শীতলক্ষ্যা
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river7" class="collapse" data-parent="#river7" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের উত্তর কেন্দ্রীয় অঞ্চলের নরসিংদী, গাজীপুর, ঢাকা এবং নারায়ণ গঞ্জ জেলার একটি নদী। এর দৈর্ঘ্য ১০৮ কিলোমিটার, গড় প্রস্থ ২২৮ মিটার। ব্রহ্মপুত্র নদের একটি উপনদী এই শীতলক্ষ্যা।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river8" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river8" href="#collapseOne_river8" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            গোমতী
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river8" class="collapse" data-parent="#river8" style="">
+                                <div class="card-body">
+                                    গঙ্গা নদীর একটি শাখা নদী গোমতী। ভারতের ত্রিপুরা রাজ্যে উৎপন্ন হয়ে বাংলাদেশের কুমিল্লা জেলা হয়ে মেঘনা নদীতে পতিত হয়েছে। বাংলাদেশ অংশে নদীটির দৈর্ঘ্য ৮৩ কিলোমিটার।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river9" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river9" href="#collapseOne_river9" aria-expanded="false">
+
+                                        <div class="headliness">
+                                            কুমারনদ
+
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river9" class="collapse" data-parent="#river9" style="">
+                                <div class="card-body">
+                                    বাংলাদেশের দক্ষিণ-পশ্চিমাঞ্চলের চুয়াডাঙ্গা জেলা, কুষ্টিয়া জেলা, ঝিনাইদহ জেলা ও মাগুরা জেলায় অবস্থিত কুমার নদ। এর দৈর্ঘ্য ১২৪ কিলোমিটার, গড় প্রস্থ ৭৫ মিটার। এর উৎস মাথা ভাঙ্গা নদী, মোহনা নব গঙ্গা নদী।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="river10" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#river10" href="#collapseOne_river10" aria-expanded="false">
+
+                                        <div class="headliness">
+                                            পশুরনদী
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_river10" class="collapse" data-parent="#river10" style="">
+                                <div class="card-body">
+                                    ববাংলাদেশের দক্ষিণ-পশ্চিমাঞ্চলের খুলনা ও বাগেরহাট জেলার একটি নদী পশুর নদী। এর দৈর্ঘ্য ১০৪ কিলোমিটার, গড় প্রস্থ ১১৬৪ মিটার। এটি গঙ্গা জল প্রবাহের একটি ধারা, খুলনা ও বাগেরহাট জেলার মাঝে অবস্থিত। সুন্দর বনের কাছে শিবসা নদীর সাথে মিলিত হয়েছে এ ইনদী
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div id="mountains">
+                    <h4><strong> পর্বত (Mountains)</strong></h4>
+
+
+                    <div id="mountains1" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#mountains1" href="#collapseOne_mountains1" aria-expanded="false">
+
+                                        <div class="headliness"> সাকাহাফং</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_mountains1" class="collapse" data-parent="#mountains1" style="">
+                                <div class="card-body">
+                                    অনানুষ্ঠানিক ভাবে বাংলাদেশের সর্বোচচ চূড়া, এর উচচতা ১০৫৬ মিটার। অবস্থান বান্দরবান জেলার থানচিতে। মোদক তুয়াং নামে ও পরিচিত এই পর্বত, ২০০৫ সালে জিংফুলেন নামক ইংরেজ পর্বতারোহী সর্বপ্রথম আরোহন করেন এই চূড়ায়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="mountains2" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#mountains2" href="#collapseOne_mountains2" aria-expanded="false">
+
+                                        <div class="headliness"> তাজিওডং</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_mountains2" class="collapse" data-parent="#mountains2" style="">
+                                <div class="card-body">
+                                    বিজয় নামে ও পরিচিত এই পর্বত শৃঙ্গ সরকারিভাবে বাংলাদেশের সর্বোচচ পর্বত শৃঙ্গ। বান্দরবান জেলার রুমা উপজেলার সাইচল পর্বত সারিতে অবস্থিত এই পর্বতের উচচতা ১২৮০ মিটারবা ৪১৯৮ ফুট।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="mountains3" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#mountains3" href="#collapseOne_heritage3" aria-expanded="false">
+
+                                        <div class="headliness"> নাসাইহুম</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_mountains3" class="collapse" data-parent="#mountains3" style="">
+                                <div class="card-body">
+                                    নাসাইহুম পর্বত অবস্থিত বান্দর বান জেলার থানচি উপজেলায়।৯১৬ মিটার উচচতা বিশিষ্ট এই পর্বত বাংলাদেশের দক্ষিণ-পূর্ব কোণের সর্ব শেষ বিন্দু।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="mountains4" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#mountains4" href="#collapseOne_mountains4" aria-expanded="false">
+
+                                        <div class="headliness">
+                                            দুমলং
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_mountains4" class="collapse" data-parent="#mountains4" style="">
+                                <div class="card-body">
+                                    দুমলং এর অবস্থান রাঙামাটি জেলার বিলাই ছড়ি উপজেলায়। । উচচতা ৩৩১৪ ফুট। এটা রাঙামাটির সর্বোচচ চূড়া। ২০১১ সালে নেচার অ্যাড ভেনচার ক্লাব দ্বারা চূড়া অভিযানে রসময় উচচতা মাপা হয়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="mountains5" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#mountains5" href="#collapseOne_mountains5" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            জোগিহাফং
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_mountains5" class="collapse" data-parent="#mountains5" style="">
+                                <div class="card-body">
+                                    এর উচচতা ৯৯১ মিটার, অবস্থান বান্দর বান জেলার থানচিতে। ২০১২ সালে প্রথম আরোহন করা হয় এই পর্বত চূড়ায়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="mountains6" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#mountains6" href="#collapseOne_mountains6" aria-expanded="false">
+
+
+                                        <div class="headliness">
+                                            কেওক্রাডং
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_mountains6" class="collapse" data-parent="#mountains6" style="">
+                                <div class="card-body">
+                                    বান্দর বান জেলার রুমায় অবস্থিত এই পর্বতের উচচতা ৯৮৬ মিটার। কেওক্রাডং বাংলাদেশের সব চেয়ে জন প্রিয় ট্র্যাকিং রুট।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+                <div id="pride">
+                    <h4><strong> Pride of Bangladesh </strong></h4>
+
+
+                    <div id="pride1" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#pride1" href="#collapseOne_pride1" aria-expanded="false">
+
+                                        <div class="headliness"> মেজবানিঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_pride1" class="collapse" data-parent="#pride1" style="">
+                                <div class="card-body">
+                                    মেজবান বাংলাদেশের চট্টগ্রাম অঞ্চলের বহুমাত্রিক ঐতিহ্যবাহী একটি ভোজের অনুষ্ঠান চট্টগ্রামের আঞ্চলিক ভাষায় একে মেজ্জান বলা হয়। কারো মৃত্যুর পর কুলখানি, মৃত্যুবার্ষিকী, শিশুর জন্মের পর আকিকা, জন্মদিবস উপলক্ষে, ব্যক্তিগত সাফল্য, বিবাহ, খৎনা ও ধর্মীয় ব্যক্তির মৃত্যুবার্ষিকী উপলক্ষে মেজবানির আয়োজন করা হয়। এটি একটি ঐতিহ্যবাহী আঞ্চলিক উৎসব যেখানে অতিথীদের সাদা ভাত এবং গরুর মাংস খাওয়ার জন্য আমন্ত্রণ জানানো হয়। বর্তমানে মেজবান ঐতিহ্যবাহী খাবার হিসেবে প্রসিদ্ধি লাভ করেছে।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="pride2" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#pride2" href="#collapseOne_pride2" aria-expanded="false">
+
+                                        <div class="headliness"> রাজশাহীসিল্কঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_pride2" class="collapse" data-parent="#pride2" style="">
+                                <div class="card-body">
+                                    রাজশাহীর বিশেষ সূক্ষ ও নরম মোলায়েম আঁশ দিয়ে তৈরি রাজশাহী সিল্ক শাড়িতে জনপ্রিয় একটি নাম। রাজশাহীর সিল্ক দিয়ে তৈরি শাড়ি এবং অন্যান্য পণ্যগুলো দেশ এবং দেশের বাইরে ব্যাপক জনপ্রিয়তা অর্জন করেছে। রাজশাহী রেশম শিল্পের বিকাশের জন্য সিল্ক গবেষণা ইন্সটিটিউট গড়ে তুলেছে। প্রায় ১০ হাজার মানুষ প্রত্যক্ষ বা পরোক্ষভাবে এই শিল্পের সাথে জড়িত।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="pride3" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#pride3" href="#collapseOne_pride3" aria-expanded="false">
+
+                                        <div class="headliness"> চুই ঝালঃ</div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_pride3" class="collapse" data-parent="#pride3" style="">
+                                <div class="card-body">
+                                    চুই ঝাল গাছ দেখতে পানের লতার মতো। পাতায় ঝাল নেই, কান্ড বা লতা কেটে ছোট টুকরা করে মাছ-মাংস রান্নায় ব্যবহার করা হয়। চুইয়ের নিজস্ব স্বাদ ও ঘ্রাণ আছে। গাছটির কাণ্ড বা লতা মসলা হিসেবে ব্যবহার করা হয়। রান্নায় এর ঝাল খাবারের স্বাদ বাড়ায় কিন্তু শরীরের কোন ক্ষতি করে না। বাংলাদেশের দক্ষিণ- পশ্চিমাঞ্চলে চুই ঝাল খুবই জনপ্রিয়।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pride4" class="accordion_styled">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#pride4" href="#collapseOne_pride4" aria-expanded="false">
+
+                                        <div class="headliness">
+                                            মনিপুরী তাঁতঃ
+                                        </div>
+                                        <i class="indicator float-right icon-plus"></i></a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_pride4" class="collapse" data-parent="#pride4" style="">
+                                <div class="card-body">
+                                    সিলেট, মৌলভীবাজার, সুনামগঞ্জ ও হবিগঞ্জ জেলায় মনিপুর জনগোষ্ঠীর বসবাস। মনিপুরীরা বুননশিল্পে খুব দক্ষ। তাদের উৎপাদিত তাঁত পণ্য মনিপুরী তাঁত বলে পরিচিত। ফানেক, শাড়ি, শাল, ওড়না, ত্রি পিস, গামছা, ফতুয়া, পাঞ্জাবি ইত্যাদি তৈরি করে থাকে তারা। মনিপুরী ভাষায় তাঁতকে বলে ইয়োং। বর্তমানে ঐতিহ্য ও আধুনিকতার মেলবন্ধনে মনিপুরী শাড়ি খুবই বিখ্যাত, উজ্জ্বল রঙের সুতায় তৈরি মনিপুরী শাড়ি দেখতে যেমন সুন্দর, তেমনি মসৃন ও হালকা।
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+            </div>-->
+
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /*         document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "block"; */
+
+
+    function myFunction(id) {
+
+
+        /*if (id == 1) {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "block";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "none";
+        } else if (id == 2) {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "block";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "none";
+        } else if (id == 3) {
+            document.getElementById("heritage").style.display = "block";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "none";
+        } else if (id == 4) {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "block";
+        }else if (id == 5) {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "block";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "none";
+        }else if (id == 6) {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "block";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "none";
+        }else if (id == 7) {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "block";
+            document.getElementById("map_text").style.display = "none";
+        }else {
+            document.getElementById("heritage").style.display = "none";
+            document.getElementById("festival").style.display = "none";
+            document.getElementById("forest").style.display = "none";
+            document.getElementById("river").style.display = "none";
+            document.getElementById("mountains").style.display = "none";
+            document.getElementById("pride").style.display = "none";
+            document.getElementById("map_text").style.display = "block";
+        }*/
+
+
+        var pointers_div = document.getElementsByClassName("map-pointers");
+
+        for (var i = 0; i < pointers_div.length; i ++) {
+            pointers_div[i].style.display = 'none';
+        }
+        document.getElementById("map-pointer-"+id).style.display = "block";
+        var image = document.getElementById("maps_id");
+        image.src = "/images/explore/Explore-Bangladesh-Map" + id + ".png";
+        document.getElementById("tooltip").style.display = "none";
+    }
+</script>
+
+@stop
+
+
+

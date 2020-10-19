@@ -1,0 +1,208 @@
+@media (max-width: 767px) {
+    .margin_60 {
+        padding-top: 27px;
+        padding-bottom: 30px;
+        margin-top: -53px;
+    }
+}
+
+
+.blank_padding {
+    padding-top: 75px;
+}
+
+body {
+    font-size: 15px;
+}
+
+p {
+    font-size: 17px !important;
+}
+
+iframe, video {
+    position: relative;
+}
+
+iframe {
+    height: 400px;
+    width: 100%;
+}
+
+#logo_home h1 a, header#colored #logo_home h1 a, header#plain #logo_home h1 a, header.sticky #logo_home h1 a {
+    height: 50px;
+    background-size: 163px 50px;
+
+}
+
+.share {
+    font-size: 30px;
+}
+
+.rounded-circle {
+    height: 100px;
+    width: 100px;
+}
+
+p {
+    color: #373232;
+}
+
+.mobile-logo {
+    height: 69px;
+    width: 110px;
+    margin: -25px;
+}
+
+#font {
+    font-family: 'Sriracha', cursive;
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .icon_search {
+        padding-right: 10px;
+    }
+    #aside {
+        margin-top: 73px;
+    }
+    #play {
+        width: 200px;
+    }
+    #start {
+        height: 40px;
+        margin-left: 130px;
+        width: 100px;
+    }
+    #search {
+        width: 260px;
+        background: white;
+    }
+
+    #banner {
+        padding-bottom: 34px;
+        background-color: #F09723;
+        border-radius: 15px 25px 1px 5px;
+        width: 300px;
+        height: 5px;
+        margin-top: 0px;
+        margin-left: -30px;
+        font-style: oblique 20deg;
+    }
+
+    #screen {
+        margin-top: 10px;
+    }
+
+    #season {
+        margin-top: -64px;
+    }
+
+    .mobile-logo {
+        height: 79px !important;
+        margin: 0px !important;
+    }
+
+    .instruction {
+        padding-top: 0;
+    }
+
+    #logo_home h1 a, header#colored #logo_home h1 a, header#plain #logo_home h1 a, header.sticky #logo_home h1 a {
+
+        margin-top: -13px;
+    }
+
+    header.sticky {
+
+        height: 50px;
+    }
+
+}
+
+@media only screen and (min-device-width: 768px) {
+    #logo_home h1 a, header#colored #logo_home h1 a, header#plain #logo_home h1 a, header.sticky #logo_home h1 a {
+        width: auto;
+        height: 65px;
+        display: block;
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: contain;
+        text-indent: -9999px;
+    }
+    #play {
+        width: 350px;
+    }
+    #margin{
+        margin-top: 49px
+    }
+    #start {
+        margin-top: 320px;
+    }
+    #search {
+        width: 320px;
+        background: white;
+        border-radius: 15px;
+    }
+
+    #banner {
+        padding-top: 12px;
+        background-color: #F09723;
+        border-radius: 15px 25px 1px 5px;
+        width: 350px;
+        height: 5px;
+        margin-top: -30px;
+        margin-left: -83px;
+        font-style: oblique 20deg;
+    }
+
+    .instruction {
+        padding-top: 60px;
+    }
+
+    #screen {
+        margin-top: 100px;
+    }
+
+    #season {
+        margin-top: -137px;
+    }
+
+    .img_list img {
+        left: 47%;
+    }
+}
+
+.btn_1, a.btn_1 {
+    background: #005F29;
+}
+
+body, p, h1, h2, h3, h4, h6, span {
+    font-family: 'Oswald', sans-serif;
+}
+
+.img_list img {
+    left: 17%;
+}
+
+.owl-theme.list_carousel .owl-next i:hover, .owl-theme.list_carousel .owl-prev i:hover {
+    color: #F09723;
+}
+
+.owl-theme.list_carousel .owl-next i:hover, .owl-theme.list_carousel .owl-prev i:hover {
+    color: #f36b20;
+}
+
+a {
+    color: #333333;
+}
+
+
+.cat-btn-bg{
+    background: #73B42F;
+    padding: 6px 0px;
+    margin: 0px 30px;
+}
+.common-bg{
+    background:#F9F9F9;
+    background-image: url("/images/common_bg.png");
+
+}

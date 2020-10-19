@@ -1,0 +1,34 @@
+1. Language Transalet- Aman
+
+3. Map Details page- saiful Bhai
+4. Travel Calculator Background Image er Height Width Fix Korte hobe -Saiful Bhai
+5. Trip Album Single Image View Route
+	Sample url: trip-album/2/title
+	-Share Button (Blog a ase)
+				saiful Bhai
+6. User Logout-  Saiful Bhai
+7. Forum Details Route: Saiful
+	-title
+
+8. About page-Saiful  Bhai
+9. Contact page- Saiful  Bhai
+
+
+
+
+10. Beauty Gram Seeder : Aman
+	Event Name
+	-Event Title Bn
+	-Event Title En
+	-Date
+	-Address
+
+	Event Photos
+	-Title
+	-Description
+	-Image
+	-YoutUbeUrl
+	-Event Id
+	-Admin id
+
+

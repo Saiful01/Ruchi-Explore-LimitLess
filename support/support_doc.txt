@@ -1,0 +1,19 @@
+composer.json file:-"ext-http": "*" sorano hoisa
+
+////////////////////////////
+         config/services/driver:
+         'google' => [
+                'client_id' => '100332234037-b58gvr7b6r39jrdcmk3nlhs0kdgrghp1.apps.googleusercontent.com',
+                'client_secret' => 'Q1B3cnqak7a892Zgo56f8dt9',
+                'redirect' => 'http://localhost:8000/login/google/callback',
+            ],
+            'facebook' => [
+                'client_id' => '260246065175042',
+                'client_secret' => 'b558a483dda750716950006c2458d114',
+                'redirect' => 'http://localhost:8000/login/facebook/callback',
+            ],
+            cliend_id,client_secret pore change korte hobe
+//////////////////////////////
+
+
+
